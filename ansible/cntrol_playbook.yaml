@@ -1,0 +1,9 @@
+---
+
+- import_playbook: docker_playbook.yaml
+- import_playbook: aws_cli_playbook.yaml
+# - import_playbook: kubectl_playbook.yaml
+#  import_playbook: monitoring_playbook.yaml
+- import_playbook: jenkins_docker_build_playbook.yaml
+- import_playbook: Java_for_nodes_playbook.yaml
+- import_playbook: workers_java_playbook.yaml

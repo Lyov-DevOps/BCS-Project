@@ -1,0 +1,38 @@
+---
+- name: Install Jenkins Docker container
+  hosts: Jenkins  
+  become: yes
+  tasks:
+    
+    - name: Add Jenkins user to Docker group
+      user:
+        name: jenkins
+        groups: docker
+        append: yes
+    
+    # - name: Pull Jenkins Docker image
+    #   docker_image:
+    #     name: jenkins/jenkins
+    #     tag: lts
+    #     pull: yes
+
+    - name: Create directory for Jenkins data
+      file:
+        path: /var/jenkins_home
+        state: directory
+        owner: 1000  # UID of the user running Jenkins in the Docker container
+        group: 1000  # GID of the user running Jenkins in the Docker container
+        mode: 0755
+
+    - name: Run Jenkins Docker container
+      docker_container:
+        name: jenkins_container
+        image: jenkins/jenkins
+        restart_policy: always
+        detach: yes
+        ports:
+          - "8080:8080"
+          - "50000:50000"
+        
+        volumes:
+          - /var/jenkins_home:/var/jenkins_home

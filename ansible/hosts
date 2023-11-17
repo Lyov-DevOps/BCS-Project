@@ -1,0 +1,4 @@
+
+Jenkins ansible_host=3.239.56.51
+Worker1 ansible_host=35.173.224.18
+Worker2 ansible_host=44.213.60.185

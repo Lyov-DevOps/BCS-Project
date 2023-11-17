@@ -1,0 +1,40 @@
+---
+- name: Install avs_cli
+  hosts: Jenkins
+  become: true
+  
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+    - name: Install unzip and tar
+      apt:
+        name:
+          - unzip
+          - tar
+        state: present
+
+    - name: Make aws directory    
+      file:
+        path: /home/ubuntu/aws/
+        state: directory
+        owner: ubuntu
+        mode: '0755'
+    
+    - name: Download awscli-exe-linux-x86_64.zip
+      get_url:
+        url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: /tmp/awscliv2.zip
+
+    - name: Extract awscliv2.zip
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /home/ubuntu/
+        remote_src: yes
+
+    - name: Install awscli
+      shell:
+        cmd: /home/ubuntu/aws/install 
+      args:
+         executable: /bin/bash
+      

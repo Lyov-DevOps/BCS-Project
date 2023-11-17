@@ -1,0 +1,12 @@
+---
+  - name: docker_in_master node
+    import_playbook: docker_playbook.yaml 
+   
+  # - name: aws cli in master node
+  #   import_playbook: aws_cli_playbook.yaml
+    
+  - name: java in all nodes
+    import_playbook: Java_for_nodes_playbook.yaml
+
+  - name: jenkins docker in master node
+    import_playbook: jenkins_docker_build_playbook.yaml 

@@ -1,0 +1,82 @@
+---
+- name: Install Jenkins Docker container
+  hosts: Jenkins
+  become: yes
+  tasks:
+    - name: Add Jenkins user to Docker group
+      user:
+        name: jenkins
+        groups: docker
+        append: yes
+    # - name: Create workdir
+    #   command: mkdir -p /home/ubuntu/jenkins-conf 
+    # - name: ownership
+    #   command: chown -R ubuntu:ubuntu /home/ubuntu/jenkins-conf/
+
+      
+      # args:
+      #   creates: /home/ubuntu/jenkins-conf
+   
+    - name: Copy Dockerfile
+      copy:
+        src: ./Dockerfiles/Dockerfile
+        # dest: /home/ubuntu/jenkins-conf/
+        dest: /home/ubuntu
+    # - name: Copy plugins.txt
+    #   copy:
+    #     src: ./Dockerfiles/plugins.txt
+    #     dest: /home/ubuntu
+
+
+
+
+    # - name: Copy install-plugins.sh
+    #   copy:
+    #     src: install-plugins.sh
+    #     dest: /home/ubuntu/jenkins-conf/
+
+    # - name: Copy casc.yaml
+    #   copy:
+    #     src: ./Dockerfiles/casc.yaml
+    #     dest: /home/ubuntu
+    
+    # - name: ownership
+    #   command: chown -R jenkins:jenkins /home/ubuntu/jenkins-conf/
+    # - name: executable
+    #   command: chmod 777 /home/ubuntu/jenkins-conf/install-plugins.sh
+    
+    # - name: Build Jenkins Docker image
+    #   docker_image:
+    #    name: your-jenkins-image
+    #    path: /home/ubuntu/jenkins-conf/
+    #    when: "'jenkins-image' not in docker_images"
+
+    # - name: Create directory for Jenkins data
+    #   file:
+    #     path: /var/jenkins_home
+    #     state: directory
+    #     owner: 1000  # UID of the user running Jenkins in the Docker container
+    #     group: 1000  # GID of the user running Jenkins in the Docker container
+    #     mode: 0755
+
+    - name: Build Jenkins Docker image
+      command: docker build . -t jenkins-image 
+      # args:
+      #   chdir: "/home/ubuntu/jenkins-conf/"
+    # - name: Run container
+    # command: docker run -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins-image
+    
+    
+    
+    - name: Run Jenkins Docker container
+      docker_container:
+        name: jenkins_docker
+        image: jenkins-image
+        restart_policy: always
+        detach: yes
+        ports:
+          - "8080:8080"
+          - "50000:50000"
+        volumes:
+          - /var/jenkins_data:/var/jenkins_home
+
