@@ -1,8 +1,7 @@
 
 provider "aws" {
   region = var.region
-  #access_key = "AKIAS62GO24QKDDPC4SV"
-  #secret_key = "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"
+
 }
 
 resource "aws_instance" "jenkins" {
